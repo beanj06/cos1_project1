@@ -11,6 +11,7 @@ public:
     float value() const { return value_; }
     float min() const { return min_; }
     float max() const { return max_; }
+	float ratio() const; // used for rendering bars, 0.0 - 1.0
 
     void set(float v);
     void add(float delta);  // negative delta decreases
