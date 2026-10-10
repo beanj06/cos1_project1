@@ -32,4 +32,25 @@ void Terminal::endFrame() {
     std::fflush(stdout);
 }
 
+void Terminal::writeAt(int row, int col, const std::string& text, Color color) {
+    moveTo(row, col);
+    std::printf("\033[%dm%s\033[0m", colorCode(color), text.c_str());
+}
 
+void Terminal::drawBar(int row, int col, int width, float ratio) {
+    if (ratio < 0.0f) ratio = 0.0f;
+    if (ratio > 1.0f) ratio = 1.0f;
+    int filled = static_cast<int>(ratio * width + 0.5f);
+
+    // green when healthy, yellow when low, red when almost empty
+    Color color = Color::Green;
+    if (ratio < 0.25f) color = Color::Red;
+    else if (ratio < 0.5f) color = Color::Yellow;
+
+    moveTo(row, col);
+    std::printf("[\033[%dm", colorCode(color));
+    for (int i = 0; i < filled; ++i) std::putchar('#');
+    std::printf("\033[0m");
+    for (int i = filled; i < width; ++i) std::putchar('.');
+    std::putchar(']');
+}
