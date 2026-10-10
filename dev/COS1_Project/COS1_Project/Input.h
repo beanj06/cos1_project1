@@ -1,16 +1,13 @@
 #pragma once
-#include <memory>
 
-// Represents a keypress event.
 enum class Key { None, Char, Up, Down, Left, Right, Enter, Escape, Backspace };
 
 struct KeyEvent {
     Key key = Key::None;
-    char ch = 0;  // valid when key == Key::Char (letters, digits, space, ...)
+    char ch = 0;  // only used when key == Key::Char
 };
 
-// Puts the terminal into raw, non-blocking mode for as long as it lives
-// and restores the original settings in the destructor.
+// Lets you read single keypresses without waiting for Enter.
 class Input {
 public:
     Input();
@@ -18,11 +15,6 @@ public:
     Input(const Input&) = delete;
     Input& operator=(const Input&) = delete;
 
-    // Returns immediately. Key::None means no key was pressed.
-    // Call repeatedly (e.g. in a loop) to drain queued keypresses.
+    // Returns right away. Key::None means nothing was pressed.
     KeyEvent poll();
-
-private:
-    struct Impl;
-    std::unique_ptr<Impl> impl_;
 };

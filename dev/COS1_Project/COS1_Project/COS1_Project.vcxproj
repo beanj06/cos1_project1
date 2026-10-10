@@ -141,7 +141,9 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Pet.cpp" />
+    <ClCompile Include="Pet.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="Input.cpp" />
   </ItemGroup>
