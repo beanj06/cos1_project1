@@ -49,5 +49,4 @@ namespace Config {
 	constexpr float kMedicineHappiness = 5.0f;  // nobody likes medicine
 	constexpr float kHealthyAbove = 90.0f;  // doesn't need medicine above this
 	constexpr float kMedicineCooldown = 20.0f;
-
 } 
