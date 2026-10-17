@@ -148,6 +148,7 @@
     <ClCompile Include="Input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Pet.h" />
     <ClInclude Include="Terminal.h" />
