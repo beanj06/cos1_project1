@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 #include "Input.h"
 #include "Pet.h"
@@ -13,7 +14,11 @@ private:
     void handleInput();
     void update(double dt);  // dt = seconds since the last update
     void render();
-    void showMessage(const std::string& text);
+
+    void useAction(int menuIndex);
+    void log(const std::string& text);
+    void warnIfLow(int index, const Stat& stat, const std::string& text);
+    std::string statusLine(Color& color) const;
     void drawStat(int row, const std::string& label, const Stat& stat);
 
     // Terminal and Input restore the user's terminal when the Game is destroyed.
@@ -22,6 +27,7 @@ private:
     Pet pet_;
 
     bool running_ = true;
-    std::string message_;
-    double messageTimer_ = 0.0;  // seconds left to show the message
+    int selected_ = 0;                // highlighted menu item
+    std::vector<std::string> log_;    // last few messages
+    bool lowWarned_[5] = {};          // so "is hungry!" only shows once per dip
 };
