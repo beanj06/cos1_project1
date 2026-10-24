@@ -1,7 +1,11 @@
 #pragma once
+#include <random>
 #include <string>
 #include <utility>
+#include <vector>
 
+// A value clamped to [min, max]. Every change goes through set()/add(),
+// so it can never go out of range.
 class Stat {
 public:
     explicit Stat(float initial = 100.0f, float min = 0.0f, float max = 100.0f);
@@ -26,11 +30,25 @@ private:
 enum class Action { Feed, Play, Sleep, Clean, Medicine };
 constexpr int kActionCount = 5;
 
-
+// What happened when you tried an action.
 struct ActionResult {
     bool success;
     std::string message;
 };
+
+// The pet's current state. It is worked out from the stats every time you
+// ask (see Pet::state()), so it can never get out of sync with them.
+// The last four are short "activity" states shown right after an action.
+enum class PetState {
+    Happy, Content, Hungry, Tired, Dirty, Sad, Sick, Sleeping, Dead,
+    Eating, Playing, Cleaning, Medicating
+};
+
+// Things that happen on their own. The Game collects them with
+// Pet::takeEvents() and decides what to tell the player.
+enum class PetEvent { WokeUp, Died, GotSick, WantsToPlay, PlayIgnored, MadeMess };
+
+enum class DeathCause { None, Starvation, Exhaustion, Filth, Illness };
 
 // For every stat, HIGHER IS BETTER: hunger 100 = full belly, 0 = starving.
 class Pet {
@@ -57,6 +75,14 @@ public:
 
     bool isAlive() const { return !health_.isEmpty(); }
     bool isSleeping() const { return sleeping_; }
+    bool isSick() const { return sick_; }
+    bool wantsToPlay() const { return wantsPlay_; }
+    float playRequestLeft() const { return playRequestTimer_; }  // seconds
+
+    PetState state() const;
+
+    DeathCause deathCause() const { return deathCause_; }
+    std::string deathCauseText() const;  // "starvation", "illness", ...
 
     // Seconds until the action can be used again (0 = ready).
     float cooldownLeft(Action action) const;
@@ -64,10 +90,22 @@ public:
     // Tries to do an action. Check result.success / result.message.
     ActionResult perform(Action action);
 
-    // Advances time by dt seconds: stats decay, cooldowns tick down.
+    // Advances time by dt seconds: stats decay, cooldowns tick down,
+    // random events may happen.
     void update(double dt);
 
+    // Returns everything that happened since the last call, then forgets it.
+    std::vector<PetEvent> takeEvents();
+
 private:
+    friend class SaveGame;  // the save system reads/writes the private fields
+
+    enum class Activity { None, Eating, Playing, Cleaning, Medicating };
+
+    void startActivity(Activity activity);
+    void triggerRandomEvent();
+    float randomRange(float low, float high);
+
     std::string name_;
     Stat hunger_;
     Stat happiness_;
@@ -75,6 +113,18 @@ private:
     Stat cleanliness_;
     Stat health_;
     double ageSeconds_ = 0.0;
+
     bool sleeping_ = false;
+    bool sick_ = false;
+    bool wantsPlay_ = false;
+    float playRequestTimer_ = 0.0f;
     float cooldown_[kActionCount] = {};
+    float nextEventIn_ = 60.0f;
+
+    Activity activity_ = Activity::None;
+    float activityTimer_ = 0.0f;
+
+    DeathCause deathCause_ = DeathCause::None;
+    std::vector<PetEvent> events_;
+    std::mt19937 rng_;
 };
