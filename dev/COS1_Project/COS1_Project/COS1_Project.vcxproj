@@ -139,18 +139,22 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Art.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pet.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Save.cpp" />
     <ClCompile Include="Terminal.cpp" />
     <ClCompile Include="Input.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Art.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Pet.h" />
+    <ClInclude Include="Save.h" />
     <ClInclude Include="Terminal.h" />
     <ClInclude Include="Input.h" />
   </ItemGroup>
