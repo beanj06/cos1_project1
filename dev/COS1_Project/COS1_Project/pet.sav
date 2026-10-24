@@ -1,0 +1,20 @@
+# Terminal Pet save file
+version=1
+saved_at=1792805838
+name=Pip
+age=52.185
+hunger=77.990
+happiness=84.993
+energy=99.411
+cleanliness=97.553
+health=100.000
+sleeping=0
+sick=0
+wants_play=0
+play_request_timer=0.000
+next_event_in=71.128
+cooldown_feed=0.000
+cooldown_play=0.000
+cooldown_sleep=1.075
+cooldown_clean=0.000
+cooldown_medicine=0.000
