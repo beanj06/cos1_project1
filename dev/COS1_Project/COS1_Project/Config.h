@@ -1,6 +1,6 @@
 #pragma once
 
-// All the numbers you might want to tune live here.
+
 // "per second" values are applied every frame based on the elapsed time.
 namespace Config {
 
